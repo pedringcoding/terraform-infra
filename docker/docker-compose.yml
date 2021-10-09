@@ -1,0 +1,12 @@
+version: "3.4"
+
+services:
+  master-ubuntu:
+    build:
+      context: .
+      dockerfile: Dockerfile_ubuntu
+    image: pedringcoding/orchestator
+    container_name: orchestrator-ubuntu
+    restart: always
+    volumes:
+      - //var/run/docker.sock:/var/run/docker.sock
