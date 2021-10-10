@@ -28,6 +28,12 @@ Run the next commands for deploy "master" machine for root infra-deploy:
 ```
 docker-compose up -d --build
 ```
+_NOTE: if you only need deploy one dist, ubuntu or centos, test to fire-up:_
+```
+docker-compose --profile centos up -d --build
+docker-compose --profile ubuntu up -d --build
+```
+
 Depending on the distribution you will use:
 ```
 docker exec -it orchestrator-ubuntu /bin/bash
