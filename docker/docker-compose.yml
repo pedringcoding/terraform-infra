@@ -5,8 +5,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_ubuntu
-    image: pedringcoding/orchestator
+    image: pedringcoding/orchestator:ubuntu2004
     container_name: orchestrator-ubuntu
+    restart: always
+    volumes:
+      - //var/run/docker.sock:/var/run/docker.sock
+
+  master-centos:
+    build:
+      context: .
+      dockerfile: Dockerfile_centos
+    image: pedringcoding/orchestator:centos8
+    container_name: orchestrator-centos
     restart: always
     volumes:
       - //var/run/docker.sock:/var/run/docker.sock

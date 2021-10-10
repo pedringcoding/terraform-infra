@@ -1,0 +1,27 @@
+# syntax=docker/dockerfile:1
+FROM centos:centos8
+
+USER root
+
+# Install packages required
+RUN yum update -y && yum install -y \
+    yum-utils
+
+# Add repositories
+RUN yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+RUN yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+
+# Install packages to docker and terraform
+RUN yum --showduplicate list terraform
+RUN yum update && yum install -y \
+    docker-ce \
+    docker-ce-cli \
+    containerd.io \
+    terraform-1.0.8
+
+# Add infrastructure as code by terraform files
+RUN mkdir orchestator-terraform
+COPY terraform /orchestator-terraform
+
+# keep alive
+ENTRYPOINT ["tail", "-f", "/dev/null"]
