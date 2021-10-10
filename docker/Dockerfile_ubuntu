@@ -4,7 +4,7 @@ FROM ubuntu:20.04
 USER root
 
 # Install packages required
-RUN apt-get update && apt-get install -y \ 
+RUN apt update && apt install -y \ 
     apt-transport-https \
     ca-certificates \
     curl \
@@ -14,13 +14,13 @@ RUN apt-get update && apt-get install -y \
 
 # Add repositories
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-RUN add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+RUN apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - 
 RUN apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 
 # Install packages to docker and terraform
-RUN apt-get update && apt install -y \
+RUN apt update && apt install -y \
     docker-ce=5:20.10.9~3-0~ubuntu-focal \
     docker-ce-cli=5:20.10.9~3-0~ubuntu-focal \
     containerd.io \
@@ -28,8 +28,8 @@ RUN apt-get update && apt install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Add infrastructure as code by terraform files
-RUN mkdir orchestator-terraform
-COPY terraform /orchestator-terraform
+RUN mkdir orchestrator-terraform
+COPY terraform /orchestrator-terraform
 
 # keep alive
 ENTRYPOINT ["tail", "-f", "/dev/null"]

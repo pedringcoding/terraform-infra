@@ -46,7 +46,7 @@ You can see the available providers and modules, [here](https://registry.terrafo
 Run the next command lines for prepare, simulate and provisioning the some local infrastructure about **orchestrator-ubuntu** or **orchestrator-centos** container.
 
 ```
-cd orchestator-terraform
+cd orchestrator-terraform
 terraform init
 terraform plan
 terraform apply

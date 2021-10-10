@@ -20,8 +20,8 @@ RUN yum update && yum install -y \
     terraform-1.0.8
 
 # Add infrastructure as code by terraform files
-RUN mkdir orchestator-terraform
-COPY terraform /orchestator-terraform
+RUN mkdir orchestrator-terraform
+COPY terraform /orchestrator-terraform
 
 # keep alive
 ENTRYPOINT ["tail", "-f", "/dev/null"]
