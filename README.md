@@ -27,7 +27,11 @@ Clone this repository, and fire up a command-line tool.
 Run the next commands for deploy "master" machine for root infra-deploy:
 ```
 docker-compose up -d --build
+```
+Depending on the distribution you will use:
+```
 docker exec -it orchestrator-ubuntu /bin/bash
+docker exec -it orchestrator-centos /bin/bash
 ```
 
 At this moment, you have a basic machine with _Docker_ and _Terraform_ installed. The next step is initialize provisioning.
@@ -39,7 +43,7 @@ For this step, you need to know some things, Surely...
 You can see the some examples about providers configure, [here](https://www.terraform.io/docs/language/providers/configuration.html)
 You can see the available providers and modules, [here](https://registry.terraform.io/search/providers).
 
-Run the next command lines for prepare, simulate and provisioning the some local infrastructure about **orchestrator-ubuntu** container.
+Run the next command lines for prepare, simulate and provisioning the some local infrastructure about **orchestrator-ubuntu** or **orchestrator-centos** container.
 
 ```
 cd orchestator-terraform
