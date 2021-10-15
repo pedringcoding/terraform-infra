@@ -1,18 +1,4 @@
 
-# Set the required provider and versions
-terraform {
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "2.15.0"
-    }
-  }
-}
-
-# Configure the docker provider
-provider "docker" {
-}
-
 # Create a docker image resource
 # -> docker pull nginx:latest
 resource "docker_image" "nginx" {
@@ -31,4 +17,3 @@ resource "docker_container" "nginx" {
     internal = 80
   }
 }
-
