@@ -2,23 +2,31 @@ version: "3.4"
 
 services:
   master-ubuntu:
-    profiles: ["ubuntu"]
+    profiles: ["ubuntu-aws"]
     build:
       context: .
       dockerfile: Dockerfile_ubuntu
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
     image: pedringcoding/orchestrator:ubuntu2004
     container_name: orchestrator-ubuntu
     restart: always
     volumes:
-      - //var/run/docker.sock:/var/run/docker.sock
+      - ./terraform/aws:/terraform-aws
 
   master-centos:
-    profiles: ["centos"]
+    profiles: ["centos-aws"]
     build:
       context: .
       dockerfile: Dockerfile_centos
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
     image: pedringcoding/orchestrator:centos8
     container_name: orchestrator-centos
     restart: always
     volumes:
-      - //var/run/docker.sock:/var/run/docker.sock
+      - ./terraform/aws:/terraform-aws
