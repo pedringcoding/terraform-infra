@@ -4,32 +4,37 @@ FROM ubuntu:20.04
 USER root
 
 # Install packages required
-RUN apt update && apt install -y \ 
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release \
-    software-properties-common
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y \ 
+    vim curl unzip \
+    # terraform
+    gnupg lsb-release software-properties-common \
+    # modules
+    git
 
 # Add repositories
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-RUN apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - 
 RUN apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 
-# Install packages to docker and terraform
-RUN apt update && apt install -y \
-    docker-ce=5:20.10.9~3-0~ubuntu-focal \
-    docker-ce-cli=5:20.10.9~3-0~ubuntu-focal \
-    containerd.io \
+# Install terraform
+RUN apt-get update && apt-get install -y \
     terraform=1.0.* \
     && rm -rf /var/lib/apt/lists/*
 
-# Add infrastructure as code by terraform files
-RUN mkdir orchestrator-terraform
-COPY terraform /orchestrator-terraform
+# Install aws-cli
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN ./aws/install
+# Configure aws-auth
+COPY ./terraform/aws/secret secret
+# Fix AWS-CLI v2 -> https://github.com/aws/aws-cli/issues/5038
+ENV AWS_PAGER=""
+RUN sed -i 's/\r$//' ./secret/keys.sh
+RUN ./secret/keys.sh
+
+# remove bridge config
+RUN rm awscliv2.zip
+RUN rm -rf /terraform-aws/secret
 
 # keep alive
 ENTRYPOINT ["tail", "-f", "/dev/null"]

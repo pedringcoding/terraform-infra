@@ -5,23 +5,30 @@ USER root
 
 # Install packages required
 RUN yum update -y && yum install -y \
-    yum-utils
+    yum-utils git
 
 # Add repositories
-RUN yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 RUN yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
-
-# Install packages to docker and terraform
 RUN yum --showduplicate list terraform
+
+# Install terraform
 RUN yum update && yum install -y \
-    docker-ce \
-    docker-ce-cli \
-    containerd.io \
     terraform-1.0.8
 
-# Add infrastructure as code by terraform files
-RUN mkdir orchestrator-terraform
-COPY terraform /orchestrator-terraform
+# Install aws-cli
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN ./aws/install
+# Configure aws-auth
+COPY ./terraform/aws/secret secret
+# Fix AWS-CLI v2 -> https://github.com/aws/aws-cli/issues/5038
+ENV AWS_PAGER=""
+RUN sed -i 's/\r$//' ./secret/keys.sh
+RUN ./secret/keys.sh
+
+# remove bridge config
+RUN rm awscliv2.zip
+RUN rm -rf /terraform-aws/secret
 
 # keep alive
 ENTRYPOINT ["tail", "-f", "/dev/null"]
